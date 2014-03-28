@@ -9,10 +9,10 @@ hardwareDataDir = '../scgData/';
 echoDataDir = '../echoData/03-05-2014-Cardiac/';
 
 %read in the hardware data
-ecgHWfile = strcat(hardwareDataDir, 'ecgExam.txt')
+ecgHWfile_exam = strcat(hardwareDataDir, 'ecgExam.txt')
 scgStFile = strcat(hardwareDataDir, 'scg1Exam.txt')
 scgPmiFile= strcat(hardwareDataDir, 'scg2Exam.txt')
-ecgHW = readDeviceData(ecgHWfile);
+ecgHW = readDeviceData(ecgHWfile_exam);
 scgSt = readDeviceData(scgStFile);
 scgPmi = readDeviceData(scgPmiFile);
 
@@ -91,7 +91,9 @@ scgPmi_velocity = kalm_scgPmi(2,:);
 figure
 hold on
 plot(cond_ecgHW_EA, '-b')
-plot(cond_scgSt
+plot(cond_scgSt_EA, '-r')
+plot(cond_scgPmi_EA, '-g')
+legend('ecgHW\_EA', 'scgSt\_EA', 'scgPmi\_EA')
 
 figure
 hold on

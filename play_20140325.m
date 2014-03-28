@@ -9,12 +9,12 @@ hardwareDataDir = '../scgData/';
 echoDataDir = '../echoData/03-05-2014-Cardiac/';
 
 %read in the hardware data
-ecgHWfile = strcat(hardwareDataDir, 'ecgExam.txt')
-scgStFile = strcat(hardwareDataDir, 'scg1Exam.txt')
-scgPmiFile= strcat(hardwareDataDir, 'scg2Exam.txt')
-ecgHW = readDeviceData(ecgHWfile);
-scgSt = readDeviceData(scgStFile);
-scgPmi = readDeviceData(scgPmiFile);
+ecgHWfile_exam = strcat(hardwareDataDir, 'ecgExam.txt')
+scgStFile_exam = strcat(hardwareDataDir, 'scg1Exam.txt')
+scgPmiFile_exam = strcat(hardwareDataDir, 'scg2Exam.txt')
+ecgHW_exam = readDeviceData(ecgHWfile_exam);
+scgSt_exam = readDeviceData(scgStFile_exam);
+scgPmi_exam = readDeviceData(scgPmiFile_exam);
 
 %echo data
 echoFile = strcat(echoDataDir, '14-09-19.b8')
@@ -24,20 +24,20 @@ ecgEchoFile = strcat(echoDataDir, '14-09-19.ecg')
 
 %play Bmode; terminate by ctrl-c
 playBmode(echo, 50);
-[stIdx enIdx] = synchDeviceWithEcho(ecgHW, ecgEcho); %start and stop index
+[stIdx enIdx] = synchDeviceWithEcho(ecgHW_exam, ecgEcho); %start and stop index
 
 %plot echo, etc
 figure
 plot(double(ecgEcho)*50, 'r')
 hold on
-plot(ecgHW(stIdx:6:enIdx))
+plot(ecgHW_exam(stIdx:6:enIdx))
 
 %cycles
-cycles_ecgHW = getCyclesFromEcg(ecgHW);
+cycles_ecgHW = getCyclesFromEcg(ecgHW_exam);
 figure
-plot(ecgHW(stIdx:enIdx));
+plot(ecgHW_exam(stIdx:enIdx));
 hold on;
-scatter(cycles_ecgHW(:,1), ecgHW(cycles_ecgHW(:,1)), 'r*');
+scatter(cycles_ecgHW(:,1), ecgHW_exam(cycles_ecgHW(:,1)), 'r*');
 
 %corrMtx
 corrMtx = getDevMtxFromBmode(echo);
@@ -63,9 +63,9 @@ scgPmi_beatarray = [];
 num_samples_700ms = floor(1200*.7);
 num_samples_avgCycle = mean(cycles_ecgHW(:,3));
 for i = 1:length(cycles_start_indexes)
-    this_ecg_700 = ecgHW(cycles_start_indexes(i):cycles_start_indexes(i)+num_samples_700ms);
-    this_scgSt_700 = scgSt(cycles_start_indexes(i):cycles_start_indexes(i)+num_samples_700ms);
-    this_scgPmi_700 = scgPmi(cycles_start_indexes(i):cycles_start_indexes(i)+num_samples_700ms);
+    this_ecg_700 = ecgHW_exam(cycles_start_indexes(i):cycles_start_indexes(i)+num_samples_700ms);
+    this_scgSt_700 = scgSt_exam(cycles_start_indexes(i):cycles_start_indexes(i)+num_samples_700ms);
+    this_scgPmi_700 = scgPmi_exam(cycles_start_indexes(i):cycles_start_indexes(i)+num_samples_700ms);
     ecgHW_beatarray = [ecgHW_beatarray, this_ecg_700];
     scgSt_beatarray = [scgSt_beatarray, this_scgSt_700];
     scgPmi_beatarray = [scgPmi_beatarray, this_scgPmi_700];
