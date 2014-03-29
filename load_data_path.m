@@ -34,16 +34,16 @@ struct_this_subject_data.echo_ecg.headers = {};
 struct_this_subject_data.echo_ecg.data = {};
 
 for i = 1:num_bmodes
-    bmode_filename = dir_list(i).name;
+    bmode_filename = dir_echo_bmode_files_only(i).name;
     split_bmode_filename = regexp(bmode_filename, '\.', 'split');
-    str_bmode_nameonly = split_bmode_filename(1);
-    ecg_filename = strcat(str_bmode_nameonly, '.ecg');
-    [data_echoBmode header_echoBmode] = readEchoData(bmode_filename);
-    [data_echoEcg header_echoEcg] = readEchoData(ecgEchoFile);
+    str_bmode_nameonly = split_bmode_filename{1};
+    ecgEcho_filename = strcat(str_bmode_nameonly, '.ecg');
+    [data_echoBmode header_echoBmode] = readEchoData(strcat(echoDataDir, bmode_filename));
+    [data_echoEcg header_echoEcg] = readEchoData(strcat(echoDataDir, ecgEcho_filename));
     struct_this_subject_data.scenario_names{i} = str_bmode_nameonly;
     struct_this_subject_data.echo_bmode.headers{i} = header_echoBmode;
     struct_this_subject_data.echo_bmode.data{i} = data_echoBmode;
-    struct_this_subject_data.echo_bmode.headers{i} = header_echoEcg;
-    struct_this_subject_data.echo_bmode.data{i} = data_echoEcg;
+    struct_this_subject_data.echo_ecg.headers{i} = header_echoEcg;
+    struct_this_subject_data.echo_ecg.data{i} = data_echoEcg;
 end
 
