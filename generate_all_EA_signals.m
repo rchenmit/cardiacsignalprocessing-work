@@ -7,6 +7,7 @@ struct_this_subject_data_processed.scenario_names = struct_this_subject_data.sce
 struct_this_subject_data_processed.deviation = {};
 struct_this_subject_data_processed.deviation_EA = {};
 struct_this_subject_data_processed.ecgHW_EA = {};
+struct_this_subject_data_processed.cond_ecgEcho = {};
 struct_this_subject_data_processed.scgSt_EA = {};
 struct_this_subject_data_processed.scgPmi_EA = {};
 struct_this_subject_data_processed.cond_ecgHW_EA = {};
