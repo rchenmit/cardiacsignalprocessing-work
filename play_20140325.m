@@ -90,7 +90,7 @@ scgPmi_velocity = kalm_scgPmi(2,:);
 
 figure
 hold on
-plot(cond_ecgHW_EA, '-b')
+plot(cond_ecgHW_EA, '-b')   
 plot(cond_scgSt_EA, '-r')
 plot(cond_scgPmi_EA, '-g')
 legend('ecgHW\_EA', 'scgSt\_EA', 'scgPmi\_EA')
