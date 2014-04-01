@@ -39,12 +39,13 @@ end
 for i = 1:length(struct_this_subject_data.scenario_names)
     this_scenario_name = struct_this_subject_data.scenario_names{i};
     ecgEcho = struct_this_subject_data.echo_ecg.data{i};
+    %sync device
     [stIdx enIdx] = synchDeviceWithEcho(ecgHW_exam, ecgEcho); %sync device and find start and stop index
     cycles_ecgHW = getCyclesFromEcg(ecgHW_exam); %cycles
     cycles_start_indexes = cycles_ecgHW(:,1);
-    ecgHW_EA = ensemble_average(ecgHW_exam, cycles_start_indexes, 1200, 0.7);%sample 700ms at 1200Hz
-    scgSt_EA = ensemble_average(scgSt_exam, cycles_start_indexes, 1200, 0.7);
-    scgPmi_EA = ensemble_average(scgPmi_exam, cycles_start_indexes, 1200, 0.7);
+    ecgHW_EA = ensemble_average(ecgHW_exam(stIdx:enIdx), cycles_start_indexes, 1200, .1, 0.7);%sample 700ms at 1200Hz
+    scgSt_EA = ensemble_average(scgSt_exam(stIdx:enIdx), cycles_start_indexes, 1200, .1, 0.7);
+    scgPmi_EA = ensemble_average(scgPmi_exam(stIdx:enIdx), cycles_start_indexes, 1200, .1, 0.7);
     %condition signals
     %%%do this on ecgEcho as well!
     cond_ecgHW_EA = conditionDeviceEcg(ecgHW_EA);

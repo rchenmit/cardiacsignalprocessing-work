@@ -43,7 +43,7 @@ for i = 1:length(struct_this_subject_data.scenario_names)
     [stIdx enIdx] = synchDeviceWithEcho(ecgHW_exam, ecgEcho); %sync device and find start and stop index
     cycles_ecgHW = getCyclesFromEcg(ecgHW_exam); %cycles
     cycles_start_indexes = cycles_ecgHW(:,1);
-    ecgHW_EA = ensemble_average(ecgHW_exam, cycles_start_indexes, 1200, .1, 0.7);%sample 700ms at 1200Hz
+    ecgHW_EA = ensemble_average(ecgHW_exam(stIdx:enIdx), cycles_start_indexes, 1200, .1, 0.7);%sample 700ms at 1200Hz
     scgSt_EA = ensemble_average(scgSt_exam, cycles_start_indexes, 1200, .1, 0.7);
     scgPmi_EA = ensemble_average(scgPmi_exam, cycles_start_indexes, 1200, .1, 0.7);
     %condition signals
