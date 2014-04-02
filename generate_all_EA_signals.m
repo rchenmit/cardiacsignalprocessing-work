@@ -105,10 +105,12 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     %%INTEGRATE: find the velocity from the acceleration (SCG)
     kalm_scgSt = kalm(cond_scgSt_EA);
     kalm_scgPmi = kalm(cond_scgPmi_EA);
-    scgSt_position = kalm_scgSt(1,:);
-    scgSt_velocity = kalm_scgSt(2,:);
-    scgPmi_position = kalm_scgPmi(1,:);
-    scgPmi_velocity = kalm_scgPmi(2,:);   
+    scgSt_position = kalm_scgSt(1,:)-mean( kalm_scgSt(1,:));
+    scgSt_velocity = kalm_scgSt(2,:)-mean(kalm_scgSt(2,:));
+    scgPmi_position = kalm_scgPmi(1,:)-mean(kalm_scgPmi(1,:));
+    scgPmi_velocity = kalm_scgPmi(2,:)-mean(kalm_scgPmi(2,:));
+    scgSt_position_cumtrapz_of_kalm = cumtrapz(scgSt_velocity);
+    scgPmi_position_cumtrapz_of_kalm = cumtrapz(scgPmi_velocity);
     %add to struct
     struct_this_subject_data_processed.ecgHW_EA{j} = ecgHW_EA;
     struct_this_subject_data_processed.scgSt_EA{j}=scgSt_EA;
@@ -122,5 +124,7 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     struct_this_subject_data_processed.scgSt_velocity{j}=scgSt_velocity;
     struct_this_subject_data_processed.scgPmi_position{j}=scgPmi_position;
     struct_this_subject_data_processed.scgPmi_velocity{j}=scgPmi_velocity;
+    struct_this_subject_data_processed.scgSt_position_cumtrapz_of_kalm{j} = scgSt_position_cumtrapz_of_kalm;
+    struct_this_subject_data_processed.scgPmi_position_cumtrapz_of_kalm{j} = scgPmi_position_cumtrapz_of_kalm;
 end
 

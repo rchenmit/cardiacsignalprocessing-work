@@ -58,10 +58,7 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     ecgHW_EA = ensemble_average(signalMinusMean(ecgHW_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);%sample from 100ms before to 700ms after the peak, at 1200Hz
     scgSt_EA = ensemble_average(signalMinusMean(scgSt_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
     scgPmi_EA = ensemble_average(signalMinusMean(scgPmi_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
-    ecgHW_cond_EA = ensemble_average_conditioned(signalMinusMean(ecgHW_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward, 'deviceE);%sample from 100ms before to 700ms after the peak, at 1200Hz
-    scgSt_cond_EA = ensemble_average_conditioned(signalMinusMean(scgSt_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
-    scgPmi_cond_EA = ensemble_average_conditioned(signalMinusMean(scgPmi_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
-    
+   
     %loop thru the peaks in deviation, and find the delay between THAT
     %DEVIATION PEAK and the ecgHW PEAK that comes right BEFORE IT
     cycles_echoDev_startIndexes = struct_this_subject_data_processed.deviation_peak_startIndexes{j};
@@ -108,10 +105,11 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     %%INTEGRATE: find the velocity from the acceleration (SCG)
     kalm_scgSt = kalm(cond_scgSt_EA);
     kalm_scgPmi = kalm(cond_scgPmi_EA);
-    scgSt_position = kalm_scgSt(1,:);
-    scgSt_velocity = kalm_scgSt(2,:);
-    scgPmi_position = kalm_scgPmi(1,:);
-    scgPmi_velocity = kalm_scgPmi(2,:);   
+    scgSt_position = kalm_scgSt(1,:)-mean( kalm_scgSt(1,:));
+    scgSt_velocity = kalm_scgSt(2,:)-mean(kalm_scgSt(2,:));
+    scgPmi_position = kalm_scgPmi(1,:)-mean(kalm_scgPmi(1,:));
+    scgPmi_velocity = kalm_scgPmi(2,:)-mean(kalm_scgPmi(2,:));
+    scgSt_position_cumsum
     %add to struct
     struct_this_subject_data_processed.ecgHW_EA{j} = ecgHW_EA;
     struct_this_subject_data_processed.scgSt_EA{j}=scgSt_EA;
