@@ -15,8 +15,10 @@ function ensemble_avg = ensemble_average(signal_data, cycles_start_indexes, fs, 
     
     beatarray = [];
     for i = 1:length(cycles_start_indexes)
-        this_signal = signal_data(cycles_start_indexes(i)-num_samples_backward:cycles_start_indexes(i)+ num_samples_forward);
-        beatarray = [beatarray, this_signal];
+        if cycles_start_indexes(i)-num_samples_backward > 0 && cycles_start_indexes(i)+ num_samples_forward < length(signal_data)
+            this_signal = signal_data(cycles_start_indexes(i)-num_samples_backward:cycles_start_indexes(i)+ num_samples_forward);
+            beatarray = [beatarray, this_signal];
+        end
     end
     
     ensemble_avg = mean(beatarray, 2);
