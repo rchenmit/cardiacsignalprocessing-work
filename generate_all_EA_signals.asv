@@ -4,7 +4,7 @@
 ecg_samp_seconds_forward = 0.7;
 ecg_samp_seconds_backward = 0.3;
 dev_samp_seconds_forward = ecg_samp_seconds_forward;
-dev_samp_seconds_backward = ecg_samp_seconds_forward;
+dev_samp_seconds_backward = ecg_samp_seconds_forward + ecg_samp_seconds_backward;
 
 %% processed data
 
@@ -27,7 +27,7 @@ struct_this_subject_data_processed.scgSt_velocity = {};
 struct_this_subject_data_processed.scgPmi_position = {};
 struct_this_subject_data_processed.scgPmi_velocity = {};
 
-%loop thru loaded data
+%loop thru loaded data, get Dev matrix
 for j = 1:length(struct_this_subject_data.scenario_names)
     bmodeEcho = struct_this_subject_data.echo_bmode.data{j};
     corrMtx = getDevMtxFromBmode(bmodeEcho);
@@ -35,6 +35,7 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     struct_this_subject_data_processed.deviation{j} = deviation;
 end
 
+%% calculate cycles from dev matrix
 for j =  1:length(struct_this_subject_data.scenario_names)
     deviation =  struct_this_subject_data_processed.deviation{j};
     deviation_sample_rate = 200; %200 Hz
@@ -53,10 +54,13 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     [stIdx enIdx] = synchDeviceWithEcho(ecgHW_exam, ecgEcho); %sync device and find start and stop index
     hwSampleLength = 12000;%echo is 10 seconds @200Hz; for HW we need 10 seconds at 1200Hz, which is 12000 frames
     cycles_ecgHW = getCyclesFromEcg(ecgHW_exam(enIdx-hwSampleLength+1:enIdx)); %cycles
-    cycles_ecgHW_start_indexes = cycles_ecgHW(:,2);   
+    cycles_ecgHW_start_indexes = cycles_ecgHW(:,2);  
     ecgHW_EA = ensemble_average(signalMinusMean(ecgHW_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);%sample from 100ms before to 700ms after the peak, at 1200Hz
     scgSt_EA = ensemble_average(signalMinusMean(scgSt_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
     scgPmi_EA = ensemble_average(signalMinusMean(scgPmi_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
+    ecgHW_cond_EA = ensemble_average_conditioned(signalMinusMean(ecgHW_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward, 'deviceE);%sample from 100ms before to 700ms after the peak, at 1200Hz
+    scgSt_cond_EA = ensemble_average_conditioned(signalMinusMean(scgSt_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
+    scgPmi_cond_EA = ensemble_average_conditioned(signalMinusMean(scgPmi_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
     
     %loop thru the peaks in deviation, and find the delay between THAT
     %DEVIATION PEAK and the ecgHW PEAK that comes right BEFORE IT
@@ -69,11 +73,20 @@ for j = 1:length(struct_this_subject_data.scenario_names)
         echoSampRate = 50; %echo sampling rate is 50 Hz
         echoDev_time_from_end = (length_echoDeviation-ind_this_echoDev_peak)/echoSampRate;%seconds = num frames/ sample_rtae
         
-        if length(cycles_ecgHW_start_indexes)+1-k > 0 
+        if length(cycles_ecgHW_start_indexes)+1-k > 0
             ind_ecgHW_peak_before_this_ecgEcho_peak = cycles_ecgHW_start_indexes(length(cycles_ecgHW_start_indexes)+1-k );
             ecgHWsampRate = 1200;
             ecgHW_time_from_end = (length_ecgEW-ind_ecgHW_peak_before_this_ecgEcho_peak) / ecgHWsampRate; %seconds = num frames / sample_rate
-            shifts = [shifts, (ecgHW_time_from_end-echoDev_time_from_end)];%add shift to list of shifts
+            this_shift = ecgHW_time_from_end-echoDev_time_from_end;
+
+            if this_shift > 0 
+                shifts = [shifts, this_shift];
+            elseif length(cycles_ecgHW_start_indexes)+1-k -1 > 0 %then consider the ecgHW peak before this one
+                ind_ecgHW_peak_before_this_ecgEcho_peak = cycles_ecgHW_start_indexes(length(cycles_ecgHW_start_indexes)+1-k -1);
+                ecgHW_time_from_end = (length_ecgEW-ind_ecgHW_peak_before_this_ecgEcho_peak) / ecgHWsampRate; %seconds = num frames / sample_rate
+                this_shift = ecgHW_time_from_end-echoDev_time_from_end;
+                shifts = [shifts, this_shift];
+            end
         end
     end
     avg_shift_echoDev = mean(shifts);

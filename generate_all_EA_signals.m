@@ -58,8 +58,7 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     ecgHW_EA = ensemble_average(signalMinusMean(ecgHW_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);%sample from 100ms before to 700ms after the peak, at 1200Hz
     scgSt_EA = ensemble_average(signalMinusMean(scgSt_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
     scgPmi_EA = ensemble_average(signalMinusMean(scgPmi_exam(enIdx-hwSampleLength+1:enIdx)), cycles_ecgHW_start_indexes, 1200, ecg_samp_seconds_backward, ecg_samp_seconds_forward);
-    ecgEcho_EA = 
-    
+   
     %loop thru the peaks in deviation, and find the delay between THAT
     %DEVIATION PEAK and the ecgHW PEAK that comes right BEFORE IT
     cycles_echoDev_startIndexes = struct_this_subject_data_processed.deviation_peak_startIndexes{j};
