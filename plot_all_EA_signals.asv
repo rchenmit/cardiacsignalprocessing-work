@@ -35,11 +35,11 @@ for i = 1:length(struct_this_subject_data.scenario_names)
     figure
     hold on
     downsample_factor_HW = ceil(length(scgSt_velocity) / length(deviation_EA));
-    scale = 4e4;%% change scale if need be
-    shift_deviationEA = mean(scgSt_velocity)/scale;%% how much to shift deviation on the figure; change if need be
+    scale_ecgHW = 4e3;%% change scale if need be
+    shift_deviationEA = mean(scgSt_velocity)/scale_ecgHW/10;%% how much to shift deviation on the figure; change if need be
     plot(deviation_EA + shift_deviationEA, '-b')
-    plot(scgSt_velocity(1:downsample_factor_HW:end)/scale, '-*r')
-    plot(scgPmi_velocity(1:downsample_factor_HW:end)/scale, '-*b')
+    plot(scgSt_velocity(1:downsample_factor_HW:end)/scale_ecgHW/10, '-*r')
+    plot(scgPmi_velocity(1:downsample_factor_HW:end)/scale_ecgHW/10, '-*b')
     title(strcat(scenario_labels{i}, ': deviation EA, scgSt\_velocity EA, scgPmi\_velocity'))
     legend('deviation\_EA', 'scgSt\_velocity', 'scgPmi\_velocity')
     savestr = strcat(savedir, 'plot_', this_scenario_name, '_',  scenario_labels{i},'_deviation_EA', '_scgSt_velocity', 'scgPmi_velocity');
@@ -49,11 +49,11 @@ for i = 1:length(struct_this_subject_data.scenario_names)
     figure
     hold on
     downsample_factor_HW = ceil(length(scgSt_velocity) / length(deviation_EA));
-    scale = 4e7;%% change scale if need be
-    shift_deviationEA = mean(scgSt_velocity)/scale;%% how much to shift deviation on the figure; change if need be
+    scale_ecgHW = 4e3;%% change scale if need be
+    shift_deviationEA = mean(scgSt_velocity)/scale_ecgHW;%% how much to shift deviation on the figure; change if need be
     plot(deviation_EA + shift_deviationEA, '-b')
-    plot(scgSt_position(1:downsample_factor_HW:end)/scale*10, '-*r')
-    plot(scgPmi_position(1:downsample_factor_HW:end)/scale*10, '-*b')
+    plot(scgSt_position(1:downsample_factor_HW:end)/scale_ecgHW/10, '-*r')
+    plot(scgPmi_position(1:downsample_factor_HW:end)/scale_ecgHW/10, '-*b')
     title(strcat(scenario_labels{i}, ': deviation EA, scgSt\_position EA, scgPmi\_position'))
     legend('deviation\_EA', 'scgSt\_position', 'scgPmi\_position')
     savestr = strcat(savedir, 'plot_', this_scenario_name, '_', scenario_labels{i}, '_deviation_EA', '_scgSt_position', 'scgPmi_position');
@@ -66,12 +66,12 @@ for i = 1:length(struct_this_subject_data.scenario_names)
     downsample_factor_HW = ceil(length(scgSt_velocity) / length(deviation_EA));
     downsample_factor_echoEcg = ceil(length(scgSt_velocity) / length(cond_ecgHW_EA));
     %scale = 4e4;%% change scale if need be
-    scale_ecgHW = 4e3;
-    shift_deviationEA = mean(scgSt_velocity)/scale;%% how much to shift deviation on the figure; change if need be
+    scale_ecgHW = 4e7;
+    shift_deviationEA = mean(scgSt_velocity)/scale_ecgHW;%% how much to shift deviation on the figure; change if need be
     plot(cond_ecgHW_EA(1:downsample_factor_HW:end)/scale_ecgHW, '-gv')
     plot(deviation_EA + shift_deviationEA, '-b')
-    plot(scgSt_velocity(1:downsample_factor_HW:end)/scale*100, '-*r')
-    plot(scgPmi_velocity(1:downsample_factor_HW:end)/scale*100, '-*b')
+    plot(scgSt_velocity(1:downsample_factor_HW:end)/scale_ecgHW*100, '-*r')
+    plot(scgPmi_velocity(1:downsample_factor_HW:end)/scale_ecgHW*100, '-*b')
     title(strcat(scenario_labels{i}, ': ecgHW\_EA, deviation EA, scgSt\_velocity EA, scgPmi\_velocity'))
     legend('ecgHW\_EA', 'deviation\_EA', 'scgSt\_velocity', 'scgPmi\_velocity')
     savestr = strcat(savedir, 'plot_', this_scenario_name, '_',  scenario_labels{i},'_ecgHW','_deviation_EA',  '_scgSt_velocity', '_scgPmi_velocity');
@@ -85,15 +85,15 @@ for i = 1:length(struct_this_subject_data.scenario_names)
     downsample_factor_echoEcg = ceil(length(scgSt_velocity) / length(cond_ecgHW_EA));
     %scale = 4e4;%% change scale if need be
     scale_ecgHW = 4e3;
-    shift_deviationEA = mean(scgSt_velocity)/scale;%% how much to shift deviation on the figure; change if need be
+    shift_deviationEA = mean(scgSt_velocity)/scale_ecgHW;%% how much to shift deviation on the figure; change if need be
     plot(cond_ecgHW_EA(1:downsample_factor_HW:end)/scale_ecgHW, '-gv')
-    plot(deviation_EA + shift_deviationEA, '-b')
-    plot(scgSt_velocity(1:downsample_factor_HW:end)/scale*100, '-*r')
-    plot(scgPmi_velocity(1:downsample_factor_HW:end)/scale*100, '-*b')
-    plot(scgSt_position(1:downsample_factor_HW:end)/scale*100, '-or')
-    plot(scgPmi_position(1:downsample_factor_HW:end)/scale*100, '-bo')
+    plot(deviation_EA + shift_deviationEA, '-m')
+    plot(scgSt_velocity(1:downsample_factor_HW:end)/scale_ecgHW*100, '-*r')
+    plot(scgPmi_velocity(1:downsample_factor_HW:end)/scale_ecgHW*100, '-*b')
+    plot(scgSt_position(1:downsample_factor_HW:end)/scale_ecgHW*50, '-ro')
+    plot(scgPmi_position(1:downsample_factor_HW:end)/scale_ecgHW*50, '-bo')
     title(strcat(scenario_labels{i}, ': ecgHW\_EA, deviation EA, scgSt\_velocity EA, scgPmi\_velocity, scgSt\_position EA, scgPmi\_position EA'))
-    legend('ecgHW\_EA', 'deviation\_EA', 'scgSt\_velocity', 'scgPmi\_velocity')
+    legend('ecgHW\_EA', 'deviation\_EA', 'scgSt\_velocity', 'scgPmi\_velocity','scgSt\_position', 'scgPmi\_position')
     savestr = strcat(savedir, 'plot_', this_scenario_name, '_',  scenario_labels{i},'_ecgHW','_deviation_EA',  '_scgSt_velocity', '_scgPmi_velocity', '_scgSt_position', '_scgPmi_position');
     saveas(gcf, savestr, 'png');
   
