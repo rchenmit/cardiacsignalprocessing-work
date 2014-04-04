@@ -4,7 +4,7 @@
 %
 %% set path, etc
 %REMEMBER TO ADD PATH FIRST!!!
-addpath('./')
+addpath(genpath('./'))
 
 %directories for data - specify!
 hardwareDataDir = '../scgData/';
