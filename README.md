@@ -1,4 +1,4 @@
-cardiacsignalprocessing-work
+cv-signalprocessing-work
 ============================
 Signal processing
 
