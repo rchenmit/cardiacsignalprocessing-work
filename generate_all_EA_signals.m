@@ -91,11 +91,12 @@ for j = 1:length(struct_this_subject_data.scenario_names)
     numSec_before_echoDev_peak_to_start_sample = avg_shift_echoDev + ecg_samp_seconds_backward;
     numFrames_before_echoDev_peak_to_start_sample = ceil(numSec_before_echoDev_peak_to_start_sample * echoSampRate);
     frame_deviation_EA_peak = ceil(dev_samp_seconds_backward*echoSampRate);
-    numSec_after_echoDev_peak_to_sample = .7-avg_shift_echoDev; %in order to sample 700 ms after the ecgHW peak
+    numSec_after_echoDev_peak_to_sample = ecg_samp_seconds_forward-avg_shift_echoDev; %in order to sample 700 ms after the ecgHW peak
     numFrames_after_echoDev_peak_to_sample = ceil(numSec_after_echoDev_peak_to_sample * echoSampRate);
     echoDev_samp_start = frame_deviation_EA_peak-numFrames_before_echoDev_peak_to_start_sample;
     echoDev_samp_end = frame_deviation_EA_peak+numFrames_after_echoDev_peak_to_sample; 
     echoDev_linedup = struct_this_subject_data_processed.deviation_EA{j}(echoDev_samp_start:echoDev_samp_end);
+    struct_this_subject_data_processed.deviation_EA{j} = echoDev_linedup;
     %condition signals
     %%%do this on ecgEcho as well!
     cond_ecgHW_EA = conditionDeviceEcg(ecgHW_EA);
